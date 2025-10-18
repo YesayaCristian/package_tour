@@ -21,10 +21,13 @@
         <p class="mb-2">Duration: {{ $package->duration }}</p>
         <p class="mb-2">Available Seats: {{ $package->available_seats }}</p>
 
-        <form action="{{ route('cart') }}" method="POST">
+        <form action="{{ route('cart.add') }}" method="POST">
             @csrf
             <input type="hidden" name="package_id" value="{{ $package->id }}">
-            <button class="bg-green-600 text-white px-4 py-2 rounded mt-4">Add to Cart</button>
+            <div class="flex items-center space-x-2 mt-2">
+                <input type="number" name="quantity" value="1" min="1" class="w-16 border rounded px-2 py-1">
+                <button class="bg-green-600 text-white px-4 py-2 rounded">Add to Cart</button>
+            </div>
         </form>
     </div>
 </div>

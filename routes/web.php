@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TourPackageController;
+use App\Http\Controllers\CartController;
 
 /*
 | AUTH ROUTES
@@ -28,7 +29,10 @@ Route::middleware(['block.admin.customer.pages'])->group(function () {
 
 // Halaman yang hanya bisa diakses oleh authenticated customer
 Route::middleware(['auth','role:customer'])->group(function () {
-    Route::get('/cart', fn() => view('customer.cart'))->name('cart');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
+    Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
     Route::get('/checkout', fn() => view('customer.checkout'))->name('checkout');
     Route::get('/orders', fn() => view('customer.orders'))->name('orders');
     Route::get('/payments', fn() => view('customer.payments'))->name('payments');
