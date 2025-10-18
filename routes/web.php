@@ -6,6 +6,11 @@ use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\PackageController as AdminPackageController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 
 /*
 | AUTH ROUTES
@@ -46,9 +51,19 @@ Route::middleware(['auth','role:customer'])->group(function () {
 | - hanya role admin yang bisa akses
 */
 Route::prefix('admin')->middleware(['auth','role:admin'])->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
-    Route::get('/packages', fn() => view('admin.packages'))->name('admin.packages');
-    Route::get('/orders', fn() => view('admin.orders'))->name('admin.orders');
-    Route::get('/users', fn() => view('admin.users'))->name('admin.users');
-    Route::get('/payments', fn() => view('admin.payments'))->name('admin.payments');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // USERS
+    Route::resource('users', AdminUserController::class, ['as' => 'admin'])->except(['show']);
+
+    // PACKAGES
+    Route::resource('packages', AdminPackageController::class, ['as' => 'admin'])->except(['show']);
+
+    // ORDERS
+    Route::get('orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
+    Route::post('orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
+
+    // PAYMENTS
+    Route::get('payments', [AdminPaymentController::class, 'index'])->name('admin.payments.index');
+    Route::post('payments/{id}/status', [AdminPaymentController::class, 'updateStatus'])->name('admin.payments.status');
 });
