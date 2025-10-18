@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 
 /*
 | AUTH ROUTES
@@ -33,9 +35,10 @@ Route::middleware(['auth','role:customer'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/cart/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
     Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
-    Route::get('/checkout', fn() => view('customer.checkout'))->name('checkout');
-    Route::get('/orders', fn() => view('customer.orders'))->name('orders');
-    Route::get('/payments', fn() => view('customer.payments'))->name('payments');
+    Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout.process');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store');
 });
 
 /*

@@ -49,7 +49,10 @@
 
     <div class="text-right">
         <p class="font-semibold text-lg mb-2">Total: $ {{ number_format($total, 2) }}</p>
-        <a href="{{ route('checkout') }}" class="bg-blue-600 text-white px-4 py-2 rounded">Proceed to Checkout</a>
+        <form action="{{ route('checkout.process') }}" method="POST">
+            @csrf
+            <button class="bg-blue-600 text-white px-4 py-2 rounded">Proceed to Checkout</button>
+        </form>
     </div>
 </div>
 @endif
